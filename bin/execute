@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+# (c) 2020 Vladimir Jimenez, all rights reserved
+# For Online Software Engineering PT - CLI Project
+
+require_relative "../lib/environment.rb"
+
+cli = Cli.new
+cli.run
+
