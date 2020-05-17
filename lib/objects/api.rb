@@ -8,6 +8,7 @@ class Api
     #Dir.chdir(File.join(File.dirname(__FILE__), 'lib/data/.cache/'))
 
     def self.get_parks(state_code)
+        Dir.mkdir(File.join(Dir.pwd, 'lib/data/.cache/')) unless File.exists?(File.join(Dir.pwd, 'lib/data/.cache/'))
         Dir.chdir(File.join(Dir.pwd, 'lib/data/.cache/'))
         @state_code = state_code
         check_cache_or_get_data
