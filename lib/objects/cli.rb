@@ -111,7 +111,7 @@ class Cli
                 puts "#{park.name} (#{park.parkCode})".center(130)
                 puts breaker
                 puts ""
-                pretty_output(long_sentance: park.description, line_width: line_width)
+                pretty_output(long_sentence: park.description, line_width: line_width)
                 puts ""
                 puts "Address:"
                 puts "\t#{street_address}, #{city}, #{state}, #{zip}".ljust(130)
@@ -135,7 +135,7 @@ class Cli
                 park.operatingHours.each do |facility|
                     puts breaker
                     puts "#{facility["name"]}"
-                    pretty_output(long_sentance: facility["description"], line_width: line_width)
+                    pretty_output(long_sentence: facility["description"], line_width: line_width)
                     puts "\nHours of operation:"
                     count = 1
                         facility["standardHours"].each do |day,hours|
@@ -159,10 +159,10 @@ class Cli
 
     end #display_park_info
 
-    def pretty_output(long_sentance:, line_width:)
+    def pretty_output(long_sentence:, line_width:)
         letterCount=0
         lineOutput=""
-        words = long_sentance.split(" ")
+        words = long_sentence.split(" ")
         words.each do |word|
             letterCount += word.size + 1 #to account for space
             if letterCount < line_width
