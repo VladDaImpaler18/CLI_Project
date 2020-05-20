@@ -24,4 +24,5 @@ I would like to thank the teacher of Software Engineering Online PT-032320 for p
 
 # Changelog
 Version 1.1 (5/20/2020) Expanded functionality to allow user to pick a different state without having to reload program.
+
 Version 1.0 (5/14/2020) Initial release
