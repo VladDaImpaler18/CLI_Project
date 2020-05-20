@@ -6,10 +6,11 @@ class Api
     #Dir.pwd                is CLI_Project/
     #File.dirname(__FILE__) is CLI_Project/lib/object
     #Dir.chdir(File.join(File.dirname(__FILE__), 'lib/data/.cache/'))
+    @@cache_directory = File.join(Dir.pwd, 'lib/data/.cache/')
 
     def self.get_parks(state_code)
         Dir.mkdir(File.join(Dir.pwd, 'lib/data/.cache/')) unless File.exists?(File.join(Dir.pwd, 'lib/data/.cache/'))
-        Dir.chdir(File.join(Dir.pwd, 'lib/data/.cache/'))
+        #Dir.chdir(File.join(Dir.pwd, 'lib/data/.cache/'))
         @state_code = state_code
         check_cache_or_get_data
     end
@@ -23,7 +24,7 @@ class Api
         api_key = ENV["MY_NPS_KEY"]
         url = "https://developer.nps.gov/api/v1/parks?stateCode=#{@state_code}&api_key=#{api_key}"
         response = Net::HTTP.get(URI(url))
-        File.write("#{@state_code}.json", response, mode: "w")
+        File.write("#{@@cache_directory}#{@state_code}.json", response, mode: "w")
         puts "Park data downloaded and saved."
         parks = JSON.parse(response)["data"]
         parks.each do |park_info|
@@ -32,8 +33,8 @@ class Api
     end
 
     def self.check_cache #Check if file exists, then make sure it's not ERROR
-        if File.file?("#{@state_code}.json")
-             file = File.open("./#{@state_code}.json", "r")
+        if File.file?("#{@@cache_directory}#{@state_code}.json")
+             file = File.open("#{@@cache_directory}#{@state_code}.json", "r")
              loaded_json = JSON.load(file) 
              if !loaded_json.keys.include?("error")
                 parks = loaded_json["data"]

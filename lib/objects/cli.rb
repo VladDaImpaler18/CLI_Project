@@ -13,26 +13,12 @@ class Cli
         puts " "
         puts "Hello, welcome to my NPS app!"
         puts " "
-        while @state_code==nil
-            puts "\nEnter a State Code to see National Park Sites in that state."
-            puts "If you don't know the state code, enter \"List\" for a list of states and their code."
-            puts " "
-            input = gets.strip.upcase
-            if (@state_list.keys.include?(input))
-                @state_code = input
-                puts "You inputted #{@state_code} - #{@state_list[@state_code]}."
-            elsif input == "List".upcase
-                print_states
-            elsif (input == "Exit".upcase || input == "Quit".upcase)
-                exit 
-            else
-                puts "\nIncorrect state code, please try again."
-            end
+        while 42
+            user_enters_statecode
+            Api.get_parks(@state_code)
+            print_list_of_parks(Park.all)
+            user_picks_park
         end
-        
-        Api.get_parks(@state_code)
-        print_list_of_parks(Park.all)
-        user_picks_park
     end #run
 
     def print_states
@@ -67,26 +53,50 @@ class Cli
 
     def user_picks_park
         while 42
-            puts "\nEnter the park number for more details. Valid options: (1-#{Park.all.size})\nMore options: X) exit  -  L) list parks"
-            puts " "
-            
+            puts "\nEnter the park number for more details. Valid options: (1-#{Park.all.size})\nMore options: X) exit  -  L) list parks  -  S) change state"
+            puts " "       
             input = gets.strip.downcase
             if (input == "l" || input == "list" || input == "list parks")
                 print_list_of_parks(Park.all)
             elsif (input == "exit" || input == "x")
                 exit
+            elsif (input == "s" || input == "change state")
+                @state_code = nil
+                Park.clear_all
+                break
             else
                 display_park_info(input)
             end
         end
     end #user_picks_park
 
+    def user_enters_statecode
+
+        while !@state_code
+            puts "\nEnter a State Code to see National Park Sites in that state."
+            puts "If you don't know the state code, enter \"List\" for a list of states and their code."
+            puts " "
+            input = gets.strip.upcase
+            if (@state_list.keys.include?(input))
+                @state_code = input
+                puts "You inputted #{@state_code} - #{@state_list[@state_code]}."
+            elsif input == "List".upcase
+                print_states
+            elsif (input == "Exit".upcase || input == "Quit".upcase)
+                exit 
+            else
+                puts "\nIncorrect state code, please try again."
+            end
+        end
+
+    end #user_enters_statecode
+
     def display_park_info(park_choice)
         
         if park_choice.match?(/\b\d+\b/) #checks to see if input is even a number
             index = park_choice.to_i - 1
             
-            if index >= 0 && Park.all[index].nil? == false
+            if index >= 0 && !Park.all[index].nil?
                 #checks to see if number input is a valid array index AND positive
                 park = Park.all[index]
                 #gets address (physical only for location)
